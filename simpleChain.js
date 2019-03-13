@@ -58,7 +58,7 @@ let myBlockChain = new BlockChain.Blockchain();
 ***********************************************/
 
 // Be careful this only will work if `validateBlock` method in Blockchain.js file return a Promise
-// myBlockChain.validateBlock(2).then((valid) => {
+// myBlockChain.validateBlock(10).then((valid) => {
 // 	console.log(valid);
 // })
 // .catch((error) => {
@@ -68,7 +68,7 @@ let myBlockChain = new BlockChain.Blockchain();
 
 /** Tampering a Block this is only for the purpose of testing the validation methods */
 
-// myBlockChain.getBlock(5).then((block) => {
+// myBlockChain.getBlock(1).then((block) => {
 // 	let blockAux = block;
 // 	blockAux.body = "Tampered Block";
 // 	myBlockChain._modifyBlock(blockAux.height, blockAux).then((blockModified) => {
@@ -85,7 +85,7 @@ let myBlockChain = new BlockChain.Blockchain();
 // 	}).catch((err) => { console.log(err);});
 // }).catch((err) => { console.log(err);});
 
-// myBlockChain.getBlock(6).then((block) => {
+// myBlockChain.getBlock(2).then((block) => {
 //   let blockAux = block;
 //   blockAux.previousBlockHash = "jndininuud94j9i3j49dij9ijij39idj9oi";
 //   myBlockChain._modifyBlock(blockAux.height, blockAux).then((blockModified) => {

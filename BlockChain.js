@@ -61,6 +61,7 @@ class Blockchain {
     // Add your code here
     // get block associated with height
     const block = await this.getBlock(height);
+    if (!block) return
     // make copy of block to re-hash
     const blockCopy = {...block};
     // initialize hash
@@ -74,7 +75,7 @@ class Blockchain {
       if (hash === newHash) {
         resolve(true)
       } else {
-        reject(false);
+        resolve(false);
       }
     })
   }
@@ -82,34 +83,31 @@ class Blockchain {
   // Validate Blockchain
   async validateChain() {
     // Add your code here
-      const promises = [];
+      const errorLog = [];
       const blockHeight = await this.getBlockHeight();
-      let link = true;
       // iterate through chain, validating each block
       for (let i = 0; i < blockHeight; i++) {
         const validateResult = await this.validateBlock(i);
         // push result of validation to promises array
-        promises.push(validateResult);
+        if (!validateResult) {
+          errorLog.push(i);
+        }
         // check that hash of currentBlock is equal to previousBlockHash of next block
         if (i < blockHeight - 1) {
           const block = await this.getBlock(i);
           const hash = block.hash;
           const nextBlock = await this.getBlock(i + 1);
           const nextHash = nextBlock.previousBlockHash;
-          if (hash !== nextHash) {
-            link = false;
+          if (hash !== nextHash && !errorLog.includes(i)) {
+            errorLog.push(i);
           }
         }
       } 
-    // convert results array into single boolean value
-    const result = promises.every(el => el);
+
+      const errorMessages = errorLog.map(el => `Block ${el} is INVALID`)
 
     return new Promise((resolve, reject) => {
-      if (result && link) {
-        resolve(true);
-      } else {
-        reject(false);
-      }
+      resolve(errorMessages);
     })
   }
 
