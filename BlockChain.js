@@ -86,28 +86,27 @@ class Blockchain {
       const errorLog = [];
       const blockHeight = await this.getBlockHeight();
       // iterate through chain, validating each block
-      for (let i = 0; i < blockHeight; i++) {
+      for (let i = 0; i < blockHeight + 1; i++) {
+
         const validateResult = await this.validateBlock(i);
         // push result of validation to promises array
         if (!validateResult) {
-          errorLog.push(i);
+          errorLog.push(`Block ${i}: invalid`);
         }
         // check that hash of currentBlock is equal to previousBlockHash of next block
-        if (i < blockHeight - 1) {
+        if (i < blockHeight) {
           const block = await this.getBlock(i);
           const hash = block.hash;
           const nextBlock = await this.getBlock(i + 1);
           const nextHash = nextBlock.previousBlockHash;
           if (hash !== nextHash && !errorLog.includes(i)) {
-            errorLog.push(i);
+            errorLog.push(`The link between Block ${i} and Block ${i + 1}: invalid`);
           }
         }
       } 
 
-      const errorMessages = errorLog.map(el => `Block ${el} is INVALID`)
-
     return new Promise((resolve, reject) => {
-      resolve(errorMessages);
+      resolve(errorLog);
     })
   }
 
